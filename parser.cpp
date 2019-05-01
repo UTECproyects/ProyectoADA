@@ -6,38 +6,89 @@
 using json = nlohmann::json;
 
 using namespace std;
-
 struct Way
 {
-  int id;
-  string name;
-  vector<int> nodes;
+  string id;
+  vector<string> nodes;
 };
-struct Nodes
+struct Node
 {
-  int id;
+  string id;
 };
+vector<Way> ways;
+vector<Node> nodos;
+void readnodes(json j)
+{
+  json a = j;
+  int sizenodes;
+  string nodeid;
+  a = a.at("node");
+  sizenodes = a.size();
+  for(int i=0;i<sizenodes;i++)
+  {
+    a=j.at("node")[i];
+    auto *temp = new Node;
+    nodeid=a.at("_id");
+    nodeid.erase(remove(nodeid.begin(), nodeid.end(), '"'), nodeid.end());
+    temp->id=nodeid;
+    nodos.push_back(*temp);
+    delete temp;
+  }
+}
+void readways(json j)
+{
+  int sizeways, sizerefs;
+  json a = j.at("way");
+  json b,c,d;
+  string id,nodo;
+  sizeways = a.size();
+  for(int i=0; i<sizeways;i++)
+  {
+    auto *temp = new Way;
+    a = j.at("way")[i];
+    b = a.at("nd");
+    sizerefs = b.size();
+    c = a.at("_id");
+    id = c;
+    id.erase(remove(id.begin(), id.end(), '"'), id.end());
+    temp->id=id;
+    for(int x=0; x<sizerefs; x++)
+    {
+    b = a.at("nd")[x];
+    d = b.at("_ref");
+    nodo = d;
+    nodo.erase(remove(nodo.begin(), nodo.end(), '"'), nodo.end());
+    temp->nodes.push_back(nodo);
+    }
+    ways.push_back(*temp);
+    delete temp;
+  };
+}
 int main()
 {
   ifstream ifs("file.json");
+  ofstream data("data.txt");
   json j = json::parse(ifs);
-  vector<Way> ways;
-  auto *temp = new Way;
-  temp->id = 1;
-  temp->name = "Ian";
-  temp->nodes.push_back(1);
-  temp->nodes.push_back(4);
-  temp->nodes.push_back(3);
-  ways.push_back(*temp);
-  delete temp;
-  for(int i=0; i<ways.size(); i++)
+  j = j.at("osm");
+  readnodes(j);
+  readways(j);
+  for(int i=0; i<nodos.size(); i++)
   {
-    cout<<"id: "<<ways[i].id<<endl;
-    cout<<"name: "<<ways[i].name<<endl;
-    for(int x=0; x<ways[i].nodes.size();x++)
+    cout<<"Nodo "<<i<<" id: "<<nodos[i].id<<endl;
+    if(data.is_open())
     {
-        cout<<"node: "<<ways[i].nodes[x]<<endl;
+      data<<"Nodo "<<i<<" id: "<<nodos[i].id<<endl;
     }
   }
-  cout<<j.at("pi");
+  for(int i=0; i<ways.size(); i++)
+  {
+    cout<<"Way ID: "<<ways[i].id<<endl;
+    data<<"Way ID: "<<ways[i].id<<endl;
+    for(int j=0; j<ways[i].nodes.size();j++)
+    {
+      cout<<"Nodo "<<j<<": "<<ways[i].nodes[j]<<endl;
+      data<<"Nodo "<<j<<": "<<ways[i].nodes[j]<<endl;
+    }
+  }
+  data.close();
 }

@@ -9,6 +9,7 @@ using namespace std;
 struct Way
 {
   string id;
+  int length;
   vector<string> nodes;
 };
 struct Node
@@ -37,15 +38,29 @@ void readnodes(json j)
 }
 void readways(json j)
 {
-  int sizeways, sizerefs;
+  int sizeways, sizerefs, sizetags;
   json a = j.at("way");
-  json b,c,d;
+  json b,c,d,Jlen,filtro,e;
+  bool highway = 0;
   string id,nodo;
   sizeways = a.size();
   for(int i=0; i<sizeways;i++)
   {
     auto *temp = new Way;
     a = j.at("way")[i];
+    filtro = a.at("tag");
+    sizetags = filtro.size();
+    for(int k=0;k<sizetags;k++)
+    {
+      Jlen=a.at("tag")[k];
+      e = Jlen.at("_k");
+      if(e == "highway")
+      {
+        highway = 1;
+      }
+    }
+    if(highway)
+  {
     b = a.at("nd");
     sizerefs = b.size();
     c = a.at("_id");
@@ -62,6 +77,8 @@ void readways(json j)
     }
     ways.push_back(*temp);
     delete temp;
+  }
+  highway = 0;
   };
 }
 int main()

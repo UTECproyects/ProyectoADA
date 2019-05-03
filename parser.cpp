@@ -15,6 +15,7 @@ struct Way
 struct Node
 {
   string id;
+  double lon, lat;
 };
 vector<Way> ways;
 vector<Node> nodos;
@@ -22,7 +23,8 @@ void readnodes(json j)
 {
   json a = j;
   int sizenodes;
-  string nodeid;
+  string nodeid, nodelon, nodelat;
+  double lon, lat;
   a = a.at("node");
   sizenodes = a.size();
   for(int i=0;i<sizenodes;i++)
@@ -31,7 +33,15 @@ void readnodes(json j)
     auto *temp = new Node;
     nodeid=a.at("_id");
     nodeid.erase(remove(nodeid.begin(), nodeid.end(), '"'), nodeid.end());
+    nodelon=a.at("_lon");
+    nodelat=a.at("_lat");
+    nodelon.erase(remove(nodelon.begin(), nodelon.end(), '"'), nodelon.end());
+    nodelat.erase(remove(nodelat.begin(), nodelat.end(), '"'), nodelat.end());
+    lon = stof(nodelon);
+    lat = stof(nodelat);
     temp->id=nodeid;
+    temp->lon=lon;
+    temp->lat=lat;
     nodos.push_back(*temp);
     delete temp;
   }
@@ -102,9 +112,13 @@ int main()
   for(int i=0; i<nodos.size(); i++)
   {
     cout<<"Nodo "<<i<<" id: "<<nodos[i].id<<endl;
+    cout<<"Longitud: "<<nodos[i].lon<<endl;
+    cout<<"Latitud: "<<nodos[i].lat<<endl;
     if(data.is_open())
     {
       data<<"Nodo "<<i<<" id: "<<nodos[i].id<<endl;
+      data<<"Longitud: "<<nodos[i].lon<<endl;
+      data<<"Latitud: "<<nodos[i].lat<<endl;
     }
   }
   for(int i=0; i<ways.size(); i++)

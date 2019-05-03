@@ -9,7 +9,7 @@ using namespace std;
 struct Way
 {
   string id;
-  int length;
+  double length;
   vector<string> nodes;
 };
 struct Node
@@ -39,28 +39,38 @@ void readnodes(json j)
 void readways(json j)
 {
   int sizeways, sizerefs, sizetags;
+  double peso;
   json a = j.at("way");
-  json b,c,d,Jlen,filtro,e;
+  json b,c,d,Jlen,filtro,e,f;
   bool highway = 0;
-  string id,nodo;
+  string id,nodo,pesostring;
   sizeways = a.size();
   for(int i=0; i<sizeways;i++)
   {
     auto *temp = new Way;
     a = j.at("way")[i];
-    filtro = a.at("tag");
-    sizetags = filtro.size();
-    for(int k=0;k<sizetags;k++)
+    if(a.size()>7)
     {
-      Jlen=a.at("tag")[k];
-      e = Jlen.at("_k");
-      if(e == "highway")
+      filtro = a.at("tag");
+      sizetags = filtro.size();
+      for(int k=0;k<sizetags;k++)
       {
-        highway = 1;
+        Jlen=a.at("tag")[k];
+        e = Jlen.at("_k");
+        if(e == "highway")
+        {
+          highway = 1;
+        }
       }
     }
+
     if(highway)
   {
+    f = a.at("d");
+    pesostring = f.at("_length");
+    pesostring.erase(remove(pesostring.begin(), pesostring.end(), '"'), pesostring.end());
+    peso = stof(pesostring);
+    temp->length=peso;
     b = a.at("nd");
     sizerefs = b.size();
     c = a.at("_id");
@@ -99,8 +109,8 @@ int main()
   }
   for(int i=0; i<ways.size(); i++)
   {
-    cout<<"Way ID: "<<ways[i].id<<endl;
-    data<<"Way ID: "<<ways[i].id<<endl;
+    cout<<"Way ID: "<<ways[i].id<<" Peso: "<<ways[i].length<<endl;
+    data<<"Way ID: "<<ways[i].id<<" Peso: "<<ways[i].length<<endl;
     for(int j=0; j<ways[i].nodes.size();j++)
     {
       cout<<"Nodo "<<j<<": "<<ways[i].nodes[j]<<endl;

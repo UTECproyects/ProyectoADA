@@ -31,10 +31,10 @@ void readnodes(json j)
   {
     a=j.at("node")[i];
     auto *temp = new Node;
-    nodeid=a.at("_id");
+    nodeid=a.at("@id");
     nodeid.erase(remove(nodeid.begin(), nodeid.end(), '"'), nodeid.end());
-    nodelon=a.at("_lon");
-    nodelat=a.at("_lat");
+    nodelon=a.at("@lon");
+    nodelat=a.at("@lat");
     nodelon.erase(remove(nodelon.begin(), nodelon.end(), '"'), nodelon.end());
     nodelat.erase(remove(nodelat.begin(), nodelat.end(), '"'), nodelat.end());
     lon = stof(nodelon);
@@ -51,7 +51,7 @@ void readways(json j)
   int sizeways, sizerefs, sizetags;
   double peso;
   json a = j.at("way");
-  json b,c,d,Jlen,filtro,e,f;
+  json b,c,d,Jlen,filtro,e,f,g;
   bool highway = 0;
   string id,nodo,pesostring;
   sizeways = a.size();
@@ -66,8 +66,9 @@ void readways(json j)
       for(int k=0;k<sizetags;k++)
       {
         Jlen=a.at("tag")[k];
-        e = Jlen.at("_k");
-        if(e == "highway")
+        e = Jlen.at("@k");
+        g = Jlen.at("@v");
+        if(e == "highway" && g != "residential")
         {
           highway = 1;
         }
@@ -77,20 +78,20 @@ void readways(json j)
     if(highway)
   {
     f = a.at("d");
-    pesostring = f.at("_length");
+    pesostring = f.at("@length");
     pesostring.erase(remove(pesostring.begin(), pesostring.end(), '"'), pesostring.end());
     peso = stof(pesostring);
     temp->length=peso;
     b = a.at("nd");
     sizerefs = b.size();
-    c = a.at("_id");
+    c = a.at("@id");
     id = c;
     id.erase(remove(id.begin(), id.end(), '"'), id.end());
     temp->id=id;
     for(int x=0; x<sizerefs; x++)
     {
     b = a.at("nd")[x];
-    d = b.at("_ref");
+    d = b.at("@ref");
     nodo = d;
     nodo.erase(remove(nodo.begin(), nodo.end(), '"'), nodo.end());
     temp->nodes.push_back(nodo);

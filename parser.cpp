@@ -104,8 +104,8 @@ void readways(json j)
 }
 int main()
 {
-  ifstream ifs("file.json");
-  ofstream data("data.txt");
+  ifstream ifs("Data/file.json");
+  ofstream data("Data/data.txt");
   json j = json::parse(ifs);
   j = j.at("osm");
   readnodes(j);
@@ -122,6 +122,8 @@ int main()
       data<<"Latitud: "<<nodos[i].lat<<endl;
     }
   }
+  cout<<"@"<<endl;
+  data<<"@"<<endl;
   for(int i=0; i<ways.size(); i++)
   {
     cout<<"Way ID: "<<ways[i].id<<" Peso: "<<ways[i].length<<endl;
@@ -131,6 +133,7 @@ int main()
       cout<<"Nodo "<<j<<": "<<ways[i].nodes[j]<<endl;
       data<<"Nodo "<<j<<": "<<ways[i].nodes[j]<<endl;
     }
+    data<<"@"<<endl;
   }
   data.close();
 }

@@ -11,14 +11,43 @@ struct Way
   string id;
   double length;
   vector<string> nodes;
+  string nombre;
 };
 struct Node
 {
   string id;
   double lon, lat;
 };
+struct edge
+{
+  string inicio, final;
+};
 vector<Way> ways;
 vector<Node> nodos;
+vector<edge> aristas;
+int aux = 1;
+void createEdges()
+{
+  for(int i = 0; i<ways.size(); i++)
+  {
+    for(int j = 0; j<ways[i].nodes.size();j++)
+    {
+      if(aux!=ways[i].nodes.size())
+      {
+        auto *temp = new edge;
+        cout<<"Size: "<<ways[i].nodes.size()<<endl;
+        cout<<"Node Inicial: "<<ways[i].nodes[j]<<endl;
+        cout<<"Node Final: "<<ways[i].nodes[aux]<<endl;
+        temp->inicio = ways[i].nodes[j];
+        temp->final=ways[i].nodes[aux];
+        aux++;
+        aristas.push_back(*temp);
+        delete temp;
+      }
+    }
+    aux=1;
+  }
+}
 void readnodes(json j)
 {
   json a = j;
@@ -57,6 +86,7 @@ void readways(json j)
   sizeways = a.size();
   for(int i=0; i<sizeways;i++)
   {
+    string nombre;
     auto *temp = new Way;
     a = j.at("way")[i];
     if(a.size()>7)
@@ -68,9 +98,13 @@ void readways(json j)
         Jlen=a.at("tag")[k];
         e = Jlen.at("@k");
         g = Jlen.at("@v");
-        if(e == "highway" && g != "residential")
+        if(e == "highway" && (g != "footway") && a.size()>8)
         {
           highway = 1;
+        }
+        if(e == "name")
+        {
+            nombre = g;
         }
       }
     }
@@ -88,6 +122,7 @@ void readways(json j)
     id = c;
     id.erase(remove(id.begin(), id.end(), '"'), id.end());
     temp->id=id;
+    temp->nombre=nombre;
     for(int x=0; x<sizerefs; x++)
     {
     b = a.at("nd")[x];
@@ -104,13 +139,14 @@ void readways(json j)
 }
 int main()
 {
+  string name;
   ifstream ifs("Data/file.json");
-  ofstream data("Data/data.txt");
+  //ofstream data("Data/data.txt",ostream::trunc);
   json j = json::parse(ifs);
   j = j.at("osm");
-  readnodes(j);
+  //readnodes(j);
   readways(j);
-  for(int i=0; i<nodos.size(); i++)
+  /*for(int i=0; i<nodos.size(); i++)
   {
     cout<<"Nodo "<<i<<" id: "<<nodos[i].id<<endl;
     cout<<"Longitud: "<<nodos[i].lon<<endl;
@@ -126,8 +162,13 @@ int main()
   data<<"@"<<endl;
   for(int i=0; i<ways.size(); i++)
   {
-    cout<<"Way ID: "<<ways[i].id<<" Peso: "<<ways[i].length<<endl;
-    data<<"Way ID: "<<ways[i].id<<" Peso: "<<ways[i].length<<endl;
+    if(ways[i].nombre != "")
+    {
+      name = ways[i].nombre;
+    }
+    else{name = "No Name";}
+    cout<<"Way ID: "<<ways[i].id<<endl<<"Nombre: "<<name<<endl<<"Peso: "<<ways[i].length<<endl;
+    data<<"Way ID: "<<ways[i].id<<endl<<"Nombre: "<<name<<endl<<"Peso: "<<ways[i].length<<endl;
     for(int j=0; j<ways[i].nodes.size();j++)
     {
       cout<<"Nodo "<<j<<": "<<ways[i].nodes[j]<<endl;
@@ -135,5 +176,6 @@ int main()
     }
     data<<"@"<<endl;
   }
-  data.close();
+  data.close();*/
+  createEdges();
 }

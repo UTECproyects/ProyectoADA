@@ -10,8 +10,5 @@ int main()
   json a;
   ifstream ifs("file.json");
   json j = json::parse(ifs);
-  j = j.at("osm");
-
-  a=j.at("way")[0];
-  cout<<a.at("tag");
+  cout<<j.at("name")<<endl;
 }

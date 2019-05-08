@@ -35,9 +35,6 @@ void createEdges()
       if(aux!=ways[i].nodes.size())
       {
         auto *temp = new edge;
-        cout<<"Size: "<<ways[i].nodes.size()<<endl;
-        cout<<"Node Inicial: "<<ways[i].nodes[j]<<endl;
-        cout<<"Node Final: "<<ways[i].nodes[aux]<<endl;
         temp->inicio = ways[i].nodes[j];
         temp->final=ways[i].nodes[aux];
         aux++;
@@ -141,12 +138,12 @@ int main()
 {
   string name;
   ifstream ifs("Data/file.json");
-  //ofstream data("Data/data.txt",ostream::trunc);
+  ofstream data("Data/data.txt",ostream::trunc);
   json j = json::parse(ifs);
   j = j.at("osm");
-  //readnodes(j);
+  readnodes(j);
   readways(j);
-  /*for(int i=0; i<nodos.size(); i++)
+  for(int i=0; i<nodos.size(); i++)
   {
     cout<<"Nodo "<<i<<" id: "<<nodos[i].id<<endl;
     cout<<"Longitud: "<<nodos[i].lon<<endl;
@@ -176,6 +173,14 @@ int main()
     }
     data<<"@"<<endl;
   }
-  data.close();*/
   createEdges();
+  for(int i=0; i<aristas.size(); i++)
+  {
+    //cout<<"Nodo Inicial: "<<aristas[i].inicio<<endl;
+    data<<"Nodo Inicial: "<<aristas[i].inicio<<endl;
+    //cout<<"Nodo Final: "<<aristas[i].final<<endl;
+    data<<"Nodo Final: "<<aristas[i].final<<endl;
+    data<<"@"<<endl;
+  }
+  data.close();
 }

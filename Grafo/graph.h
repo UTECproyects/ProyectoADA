@@ -50,8 +50,8 @@ class Graph {
         typedef Graph<Tr> self;
         typedef Node<self> node;
         typedef Edge<self> edge;
-        typedef unordered_map<int,node*> NodeSeq;
-        typedef unordered_map<int,edge*> EdgeSeq;
+        typedef unordered_map<long,node*> NodeSeq;
+        typedef unordered_map<long,edge*> EdgeSeq;
         typedef typename Tr::N N;
         typedef typename Tr::E E;
         typedef typename NodeSeq::iterator NodeIte;

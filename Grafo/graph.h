@@ -41,7 +41,7 @@ struct matrices{
 class Traits {
 	public:
 		typedef char N;
-		typedef int E;
+		typedef long E;
 };
 
 template <typename Tr>
@@ -118,17 +118,17 @@ class Graph {
                 return;
             }
             node* temp=new node(id,x,y);
-            nodes.insert(pair<int,node*>(id,temp));
+            nodes.insert(pair<E,node*>(id,temp));
         };
         //-----------------------------------------------------------------------INSERTAR ARISTA
-        void insertar_arista(E v1,E v2,E peso){
+        void insertar_arista(E v1,E v2,string nombre,E peso){
             if (buscar_arista(v1,v2)!=nullptr){
                 cout<<"Arista "<<v1<<"-"<<v2<<" ya existe"<<endl;
                 system("pause");
                 return;
             }
-            edge* temp1=new edge(peso,nodes[v1],nodes[v2]);
-            nodes[v1]->edges.insert(pair<int,edge*>(v2,temp1));
+            edge* temp1=new edge(peso,nombre,nodes[v1],nodes[v2]);
+            nodes[v1]->edges.insert(pair<E,edge*>(v2,temp1));
         }
         //-----------------------------------------------------------------------ELIMINAR ARISTA
         EdgeIte eliminar_arista(E v1,E v2){
@@ -167,7 +167,7 @@ class Graph {
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 cout <<ni->first<<endl;
                 for(ei=ni->second->edges.begin();ei!=ni->second->edges.end();++ei){
-                    cout <<"nodo : "<<ei->first<<" peso : "<<ei->second->get()<<" / ";
+                    cout <<"nodo : "<<ei->first<<" peso : "<<ei->second->get()<<" name: "<<ei->second->get_nombre()<<" / ";
                 }
                 cout <<endl;
             }

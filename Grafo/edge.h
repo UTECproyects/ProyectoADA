@@ -1,8 +1,8 @@
 #ifndef EDGE_H
 #define EDGE_H
-
 #include "node.h"
-#include<string>
+using namespace std;
+
 template <typename G>
 class Edge {
     public:

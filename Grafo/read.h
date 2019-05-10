@@ -22,49 +22,25 @@ class Read {
     string file;
 
 public:
-    Read() {
-            cout<<"Escriba el nombre del archivo a leer: ";
-        cin>>file;
-        file += ".txt";
-        ifstream theFile(file);
-        if(!theFile.is_open()) {
-            cout << "El archivo no existe...\n";
-        }else{
-            cout<<"Se logro abrir el archivo...\n\n";
-        }
-        // TODO
-    }
-
     void getGraph(graph* g1) {
-        ifstream theFile(file);
-
-        if(theFile.is_open()){
-        double x, y;
-        E a, b, c;
-        E m, peso;
-        bool flag;
-        int i=0;
-
-
-        theFile >> flag;
-        g1->tipo(flag);
-        theFile >> m;
-
-            while(i != m){
-                    theFile >> x >> y >> c;
-                    g1->insertar_nodo(x, y,c);
-                    i++;
-            }
-            theFile>>a>>b>>peso;
-            while(theFile){
-                g1->insertar_arista(a, b, peso);
-                theFile>>a>>b>>peso;
-            }
-
-
-
-    }
-    }
+      ifstream archivo;
+      string line;
+      long linea;
+      int i = 0;
+      double tempx, tempy;
+      archivo.open("../Data/data.txt");
+        while(!archivo.eof())
+        {
+          archivo>>line;
+          if(line!="@")
+          {
+            linea = stol(line);
+            archivo>>tempx>>tempy;
+            g1->insertar_nodo(tempx,tempy,linea);
+          }
+          else{break;}
+        }
+      }
     ~Read(){
 
     }

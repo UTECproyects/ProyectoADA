@@ -39,7 +39,6 @@ int main(int argc, char *argv[]) {
     cout <<endl;
     g1.info_nodo();
     */
-    system("PAUSE");
     return EXIT_SUCCESS;
 }
 

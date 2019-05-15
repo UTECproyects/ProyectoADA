@@ -10,11 +10,11 @@ class Edge {
         typedef typename G::N N;
         typedef typename G::node node;
         node* nodes[2];
-        Edge(E data_,string nombre_,node* node1,node* node2):data(data_),nombre(nombre_){
+        Edge(double data_,string nombre_,node* node1,node* node2):data(data_),nombre(nombre_){
             nodes[0]=node1;
             nodes[1]=node2;
         }
-        E get(){return data;}
+        double get(){return data;}
         string get_nombre(){return nombre;}
         /*
         node* goes_to(N v1){
@@ -27,7 +27,7 @@ class Edge {
         */
         ~Edge(){}
     private:
-        E data;
+        double data;
         string nombre;
 };
 

@@ -38,11 +38,20 @@ struct matrices{
     }
 };
 //kennet louden contrucccion de comppiladores
+#ifdef _WIN32
+class Traits {
+	public:
+		typedef char N;
+		typedef long long E;
+};
+#else
 class Traits {
 	public:
 		typedef char N;
 		typedef long E;
 };
+#endif
+
 
 template <typename Tr>
 class Graph {
@@ -50,10 +59,10 @@ class Graph {
         typedef Graph<Tr> self;
         typedef Node<self> node;
         typedef Edge<self> edge;
-        typedef unordered_map<long,node*> NodeSeq;
-        typedef unordered_map<long,edge*> EdgeSeq;
         typedef typename Tr::N N;
         typedef typename Tr::E E;
+        typedef unordered_map<E,node*> NodeSeq;
+        typedef unordered_map<E,edge*> EdgeSeq;
         typedef typename NodeSeq::iterator NodeIte;
         typedef typename EdgeSeq::iterator EdgeIte;
 
@@ -111,20 +120,20 @@ class Graph {
             }
         }*/
         //-----------------------------------------------------------------------INSERTAR NODO
-        void insertar_nodo(double x, double y, E id){
+        void insertar_nodo(E id,double x, double y){
             if (buscar_vertice(id)!=nullptr){
                 cout<<"Nodo "<<id <<" ya existente"<<endl;
-                system("pause");
+                //system("pause");
                 return;
             }
             node* temp=new node(id,x,y);
             nodes.insert(pair<E,node*>(id,temp));
         };
         //-----------------------------------------------------------------------INSERTAR ARISTA
-        void insertar_arista(E v1,E v2,string nombre,E peso){
+        void insertar_arista(E v1,E v2,string nombre,double peso){
             if (buscar_arista(v1,v2)!=nullptr){
                 cout<<"Arista "<<v1<<"-"<<v2<<" ya existe"<<endl;
-                system("pause");
+                //system("pause");
                 return;
             }
             edge* temp1=new edge(peso,nombre,nodes[v1],nodes[v2]);
@@ -171,6 +180,12 @@ class Graph {
                 }
                 cout <<endl;
             }
+        }
+        void printxy(){
+          for (ni=nodes.begin();ni!=nodes.end();++ni){
+              cout <<ni->first<<" "<<ni->second->get_x()<<" "<<ni->second->get_y()<<endl;
+          }
+
         }
         //-----------------------------------------------------------------------DENSIDAD
         /*double densidad(){

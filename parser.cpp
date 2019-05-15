@@ -9,9 +9,9 @@ using namespace std;
 struct Way
 {
   string id;
-  double length;
   vector<string> nodes;
   string nombre;
+  bool oneway = 0;
 };
 struct Node
 {
@@ -20,7 +20,8 @@ struct Node
 };
 struct edge
 {
-  string inicio, final;
+  string inicio, final,nombre;
+  bool oneway;
 };
 vector<Way> ways;
 vector<Node> nodos;
@@ -37,6 +38,8 @@ void createEdges()
         auto *temp = new edge;
         temp->inicio = ways[i].nodes[j];
         temp->final=ways[i].nodes[aux];
+        temp->nombre=ways[i].nombre;
+        temp->oneway=ways[i].oneway;
         aux++;
         aristas.push_back(*temp);
         delete temp;
@@ -95,7 +98,7 @@ void readways(json j)
         Jlen=a.at("tag")[k];
         e = Jlen.at("@k");
         g = Jlen.at("@v");
-        if(e == "highway" && (g != "footway") && a.size()>8)
+        if(e == "highway" && !(g == "footway" || g=="cycleway"))
         {
           highway = 1;
         }
@@ -103,16 +106,15 @@ void readways(json j)
         {
             nombre = g;
         }
+        if(e == "oneway" && g =="yes")
+        {
+            temp->oneway = 1;
+        }
       }
     }
 
     if(highway)
   {
-    f = a.at("d");
-    pesostring = f.at("@length");
-    pesostring.erase(remove(pesostring.begin(), pesostring.end(), '"'), pesostring.end());
-    peso = stof(pesostring);
-    temp->length=peso;
     b = a.at("nd");
     sizerefs = b.size();
     c = a.at("@id");
@@ -143,6 +145,23 @@ int main()
   j = j.at("osm");
   readnodes(j);
   readways(j);
+  /*for(int i=0; i<ways.size(); i++)
+  {
+    if(ways[i].nombre != "")
+    {
+      name = ways[i].nombre;
+    }
+    else{name = "No Name";}
+    cout<<"Way ID: "<<ways[i].id<<endl<<"Nombre: "<<name<<endl;
+    data<<ways[i].id<<endl<<name<<endl;
+    for(int j=0; j<ways[i].nodes.size();j++)
+    {
+      cout<<ways[i].nodes[j]<<endl;
+      data<<ways[i].nodes[j]<<endl;
+    }
+    data<<"@"<<endl;
+  }*/
+  createEdges();
   for(int i=0; i<nodos.size(); i++)
   {
     cout<<"Nodo "<<i<<" id: "<<nodos[i].id<<endl;
@@ -150,37 +169,24 @@ int main()
     cout<<"Latitud: "<<nodos[i].lat<<endl;
     if(data.is_open())
     {
-      data<<"Nodo "<<i<<" id: "<<nodos[i].id<<endl;
-      data<<"Longitud: "<<nodos[i].lon<<endl;
-      data<<"Latitud: "<<nodos[i].lat<<endl;
+      data<<nodos[i].id<<endl;
+      data<<nodos[i].lon<<endl;
+      data<<nodos[i].lat<<endl;
     }
   }
   cout<<"@"<<endl;
   data<<"@"<<endl;
-  for(int i=0; i<ways.size(); i++)
-  {
-    if(ways[i].nombre != "")
-    {
-      name = ways[i].nombre;
-    }
-    else{name = "No Name";}
-    cout<<"Way ID: "<<ways[i].id<<endl<<"Nombre: "<<name<<endl<<"Peso: "<<ways[i].length<<endl;
-    data<<"Way ID: "<<ways[i].id<<endl<<"Nombre: "<<name<<endl<<"Peso: "<<ways[i].length<<endl;
-    for(int j=0; j<ways[i].nodes.size();j++)
-    {
-      cout<<"Nodo "<<j<<": "<<ways[i].nodes[j]<<endl;
-      data<<"Nodo "<<j<<": "<<ways[i].nodes[j]<<endl;
-    }
-    data<<"@"<<endl;
-  }
-  createEdges();
   for(int i=0; i<aristas.size(); i++)
   {
     //cout<<"Nodo Inicial: "<<aristas[i].inicio<<endl;
-    data<<"Nodo Inicial: "<<aristas[i].inicio<<endl;
+    if(aristas[i].nombre !="")data<<aristas[i].nombre<<endl;
+    else{data<<"No name"<<endl;}
+    data<<aristas[i].oneway<<endl;
+    data<<aristas[i].inicio<<endl;
     //cout<<"Nodo Final: "<<aristas[i].final<<endl;
-    data<<"Nodo Final: "<<aristas[i].final<<endl;
-    data<<"@"<<endl;
+    data<<aristas[i].final<<endl;
+
   }
+  data<<"@"<<endl;
   data.close();
 }

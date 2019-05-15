@@ -111,20 +111,20 @@ class Graph {
             }
         }*/
         //-----------------------------------------------------------------------INSERTAR NODO
-        void insertar_nodo(double x, double y, E id){
+        void insertar_nodo(E id,double x, double y){
             if (buscar_vertice(id)!=nullptr){
                 cout<<"Nodo "<<id <<" ya existente"<<endl;
-                system("pause");
+                //system("pause");
                 return;
             }
             node* temp=new node(id,x,y);
             nodes.insert(pair<E,node*>(id,temp));
         };
         //-----------------------------------------------------------------------INSERTAR ARISTA
-        void insertar_arista(E v1,E v2,string nombre,E peso){
+        void insertar_arista(E v1,E v2,string nombre,double peso){
             if (buscar_arista(v1,v2)!=nullptr){
                 cout<<"Arista "<<v1<<"-"<<v2<<" ya existe"<<endl;
-                system("pause");
+                //system("pause");
                 return;
             }
             edge* temp1=new edge(peso,nombre,nodes[v1],nodes[v2]);
@@ -171,6 +171,12 @@ class Graph {
                 }
                 cout <<endl;
             }
+        }
+        void printxy(){
+          for (ni=nodes.begin();ni!=nodes.end();++ni){
+              cout <<ni->first<<" "<<ni->second->get_x()<<" "<<ni->second->get_y()<<endl;
+          }
+
         }
         //-----------------------------------------------------------------------DENSIDAD
         /*double densidad(){

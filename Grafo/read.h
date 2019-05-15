@@ -15,14 +15,6 @@ inline double DegreeToRadian(double angle)
 	return M_PI * angle / 180.0;
 }
 
-
-
-class Trts {
-public:
-    typedef char N;
-    typedef long E;
-};
-
 template <typename Tr>
 class Read {
     typedef Graph<Tr> self;
@@ -61,7 +53,11 @@ public:
           archivo>>line;
           if(line!="@")
           {
-            linea = stol(line);
+						#ifdef _WIN32
+            linea = stoll(line);
+						#else
+						linea = stol(line);
+						#endif
             archivo>>tempx>>tempy;
             pair<double,double> coords;
             coords.first=tempx;
@@ -96,6 +92,6 @@ public:
         }
       }
 };
-typedef Read<Trts> rd;
+typedef Read<Traits> rd;
 
 #endif

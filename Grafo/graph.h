@@ -38,11 +38,20 @@ struct matrices{
     }
 };
 //kennet louden contrucccion de comppiladores
+#ifdef _WIN32
+class Traits {
+	public:
+		typedef char N;
+		typedef long long E;
+};
+#else
 class Traits {
 	public:
 		typedef char N;
 		typedef long E;
 };
+#endif
+
 
 template <typename Tr>
 class Graph {
@@ -50,10 +59,10 @@ class Graph {
         typedef Graph<Tr> self;
         typedef Node<self> node;
         typedef Edge<self> edge;
-        typedef unordered_map<long,node*> NodeSeq;
-        typedef unordered_map<long,edge*> EdgeSeq;
         typedef typename Tr::N N;
         typedef typename Tr::E E;
+        typedef unordered_map<E,node*> NodeSeq;
+        typedef unordered_map<E,edge*> EdgeSeq;
         typedef typename NodeSeq::iterator NodeIte;
         typedef typename EdgeSeq::iterator EdgeIte;
 

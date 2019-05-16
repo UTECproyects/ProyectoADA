@@ -16,10 +16,12 @@ Window {
     }
 
     Map{
+
         plugin:map
          anchors.fill: parent
          zoomLevel: 13
-//TODO, QUITAR HARDCODEADA
+         id:myMap
+
          center : QtPositioning.coordinate( -12.1348806 , -77.02212709999999)
        
     }

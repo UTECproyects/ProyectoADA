@@ -31,8 +31,8 @@ int main(int argc, char *argv[])
     vector<QObject*> misListas;
     //TODO
     //acuerdate, a qt le vas a pasar SOLO COORDENADAS, i =2n, n siendo el numero del nodo
+
     auto idNodoi = nodos.begin();
- //   auto idNodoj = nodos.begin() ;
     std::set<int> ids;
     vector<unsigned long> idsParafind;
 
@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
         while(!(ids.insert(currRand)).second)currRand= rand() %numNodos;
         //Tenemos los i's de los nodos a ser usados
     }
+
     int  nodoEstamos = 0;
     for (int i =0;i < numNodos; i++) {
         if (i == (*ids.find(i)) ) {
@@ -52,15 +53,13 @@ int main(int argc, char *argv[])
         idsParafind.push_back(idNodoi->first);
         misListas[i]->setProperty("centerLong",x);
         misListas[i]->setProperty("centerLat",y);
-        list<Node<unsigned long>> ResultadosEstrella = g1.A_Star(idNodoi,nodos(idsParafind.begin())
+        list<Graph<Traits>::node*> ResultadosEstrella = g1.A_Star(idNodoi->first,*idsParafind.begin());
 
+        auto idNodoj = ResultadosEstrella.begin();
+        for (unsigned long j =0;j <= ResultadosEstrella.size(); j++) {
+            vector<double> toSetCoords;
 
-
-        auto idNodoj = nodos.begin() ;
-        for (unsigned long j =0;j <= ids.size(); j++) {
-            vector<string> toSetCoords;
-            toSetCoords.push_back();
-Star
+          //  toSetCoords.push_back();
             if (j == loquemevanadarlasfunciones.size()){
                 QVariant buffer;
                 buffer.setValue(toSetCoords);

@@ -12,7 +12,17 @@ int main(int argc, char *argv[]) {
     graph g1;
     rd gg;
     gg.getGraph(&g1);
-    g1.print();
+    long long a,b;
+    bool ciclo=true;
+    while(ciclo){
+      cout<<"ingrese nodos: "<<endl;
+      cin>>a;
+      if(a==0)break;
+      cin>>b;
+      g1.A_Star(a,b);
+      cout<<endl;
+    }
+    //g1.print();
     cout <<endl;
     /*
     g1.floyd_warshall();
@@ -21,7 +31,6 @@ int main(int argc, char *argv[]) {
     cout<<"GGGGGGGGGGG"<<endl;
     */
     //
-    //g1.A_Star('A','K');
 
 
 

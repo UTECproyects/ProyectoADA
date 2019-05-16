@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
                 QList<QVariant> buffer;
                 double lat =(*idNodoj)->get_x();
                 double longit = (*idNodoj)->get_y();
-                buffer.append(QVariant::fromValue(QGeoCoordinate(lat,longit)));
+                    buffer.append(QVariant::fromValue(QGeoCoordinate(lat,longit)));
                 if (j == ResultadosEstrella.size()){
 
                     misListas[i]->setProperty("vectorCoords",buffer);

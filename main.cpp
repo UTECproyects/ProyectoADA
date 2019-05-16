@@ -8,6 +8,7 @@
 #include <QQmlComponent>
 #include "Grafo/read.h"
 #include "Grafo/graph.h"
+#include"Grafo/node.h"
 #include <set>
 #define nNodos 5
 #define distMax 100000
@@ -31,9 +32,9 @@ int main(int argc, char *argv[])
     //TODO
     //acuerdate, a qt le vas a pasar SOLO COORDENADAS, i =2n, n siendo el numero del nodo
     auto idNodoi = nodos.begin();
-    auto idNodoj = nodos.begin() ;
+ //   auto idNodoj = nodos.begin() ;
     std::set<int> ids;
-    vector<int> idsParafind;
+    vector<unsigned long> idsParafind;
 
     //encuentra n nodos diferentes
     for (int x = 0;x <= nNodos; x++) {
@@ -41,28 +42,35 @@ int main(int argc, char *argv[])
         while(!(ids.insert(currRand)).second)currRand= rand() %numNodos;
         //Tenemos los i's de los nodos a ser usados
     }
+    int  nodoEstamos = 0;
     for (int i =0;i < numNodos; i++) {
         if (i == (*ids.find(i)) ) {
         misListas.push_back(component.create());
         //placeholders, esto es lima
+        auto x =idNodoi->second->get_x();
+        auto y =idNodoi->second->get_y();
+        idsParafind.push_back(idNodoi->first);
+        misListas[i]->setProperty("centerLong",x);
+        misListas[i]->setProperty("centerLat",y);
+        list<Node<unsigned long>> ResultadosEstrella = g1.A_Star(idNodoi,nodos(idsParafind.begin())
 
 
-        misListas[i]->setProperty("centerLong","-12.1348806");
-        misListas[i]->setProperty("centerLat","-77.02212709999999");
 
-
-        for (unsigned long j =0;j <= loquemevanadarlasfunciones.size(); j++) {
+        auto idNodoj = nodos.begin() ;
+        for (unsigned long j =0;j <= ids.size(); j++) {
             vector<string> toSetCoords;
-            toSetCoords.push_back(loquemevanadarlasfunciones[j]);
-
+            toSetCoords.push_back();
+Star
             if (j == loquemevanadarlasfunciones.size()){
                 QVariant buffer;
                 buffer.setValue(toSetCoords);
                 misListas[i]->setProperty("vectorCoords",buffer);
             }
+        idNodoj++;
         }
 
-    }idNodoi++;
+    nodoEstamos++;
+        }idNodoi++;
     }
     if (engine.rootObjects().isEmpty())
         return -1;

@@ -9,6 +9,7 @@
 #include <limits>
 #include <unordered_map>
 #include <math.h>
+#include <cmath>
 
 #include <limits.h>
 #include <utility>
@@ -42,12 +43,21 @@ struct matrices
     }
 };
 //kennet louden contrucccion de comppiladores
+#ifdef _WIN32
+class Traits
+{
+public:
+    typedef char N;
+    typedef long long E;
+};
+#else
 class Traits
 {
 public:
     typedef char N;
     typedef long E;
 };
+#endif
 
 template <typename Tr>
 class Graph
@@ -56,21 +66,20 @@ public:
     typedef Graph<Tr> self;
     typedef Node<self> node;
     typedef Edge<self> edge;
-    typedef unordered_map<long, node *> NodeSeq;
-    typedef unordered_map<long, edge *> EdgeSeq;
     typedef typename Tr::N N;
     typedef typename Tr::E E;
+    typedef unordered_map<E, node *> NodeSeq;
+    typedef unordered_map<E, edge *> EdgeSeq;
     typedef typename NodeSeq::iterator NodeIte;
     typedef typename EdgeSeq::iterator EdgeIte;
 
     Graph(){};
     void tipo(bool tipo)
     {
-        nodes
-            dir = tipo;
+        dir = tipo;
     };
     //-----------------------------------------------------------------------TOTAL NODOS
-    unsigned long total_nodos()
+    int total_nodos()
     {
         return nodes.size();
     }
@@ -458,20 +467,34 @@ public:
 
         }*/
     //-----------------------------------------------------------------------A*
-    double distance(N v1, N v2)
+    inline double DegreeToRadian(double angle)
     {
-        node *temp1 = buscar_vertice(v1);
-        node *temp2 = buscar_vertice(v2);
-        return sqrt(pow(temp1->get_x() - temp2->get_x(), 2) + pow(temp1->get_y() - temp2->get_y(), 2));
+        return M_PI * angle / 180.0;
     }
-    list<node *> A_Star(N v1, N v2)
+    double distance(E tempini, E tempfin)
     {
-        set<N> exitt;
+        map<E, pair<double, double>> idcoords;
+        double latRad1 = DegreeToRadian(idcoords[tempini].second);
+        double latRad2 = DegreeToRadian(idcoords[tempfin].second);
+        double lonRad1 = DegreeToRadian(idcoords[tempini].first);
+        double lonRad2 = DegreeToRadian(idcoords[tempfin].first);
+
+        double diffLa = latRad2 - latRad1;
+        double doffLo = lonRad2 - lonRad1;
+
+        double computation = asin(sqrt(sin(diffLa / 2) * sin(diffLa / 2) + cos(latRad1) * cos(latRad2) * sin(doffLo / 2) * sin(doffLo / 2)));
+        return 2 * 6372.8 * computation * 1000;
+    }
+    list<node *> A_Star(E v1, E v2)
+    {
+        //typename multimap<double,node*>::iterator it;
+        typedef typename multimap<double, node *>::iterator iter;
+        iter it;
+        set<E> exitt;
         node *temp = buscar_vertice(v1);
         multimap<double, node *> nodos;
-        typename multimap<double, node *>::iterator it;
         nodos.insert(pair<double, node *>(distance(v1, v2), temp));
-        unordered_map<N, pair<double[2], N>> tabla;
+        unordered_map<E, pair<double[2], E>> tabla;
         tabla[v1].first[0] = 0;
         tabla[v1].first[1] = distance(v1, v2);
         tabla[v1].second = v1;
@@ -484,27 +507,30 @@ public:
             {
                 break;
             }
+
             for (ei = temp->edges.begin(); ei != temp->edges.end(); ++ei)
             {
-                char aa = (*ei)->goes_to(temp->get())->get();
+                E aa = ei->first;
                 if (exitt.count(aa) == 1)
                 {
                     continue;
                 }
-                double bb = tabla[temp->get()].first[0] + (*ei)->get();
+                double bb = tabla[temp->get()].first[0] + ei->second->get();
                 if (tabla.count(aa) == 1)
                 {
                     if (bb < tabla[aa].first[0])
                     {
+                        pair<iter, iter> rango;
+                        rango = nodos.equal_range(tabla[aa].first[0]);
                         tabla[aa].first[0] = bb;
                         tabla[aa].first[1] = bb + distance(aa, v2);
                         tabla[aa].second = temp->get();
-                        for (it = nodos.begin(); it != nodos.end(); ++it)
+                        for (it = rango.first; it != rango.second; ++it)
                         {
                             if (it->second->get() == aa)
                             {
                                 nodos.erase(it);
-                                nodos.insert(pair<double, node *>(bb + distance(aa, v2), (*ei)->goes_to(temp->get())));
+                                nodos.insert(pair<double, node *>(bb + distance(aa, v2), ei->second->nodes[1]));
                                 break;
                             }
                         }
@@ -515,14 +541,15 @@ public:
                     tabla[aa].first[0] = bb;
                     tabla[aa].first[1] = bb + distance(aa, v2);
                     tabla[aa].second = temp->get();
-                    nodos.insert(pair<double, node *>(bb + distance(aa, v2), (*ei)->goes_to(temp->get())));
+                    nodos.insert(pair<double, node *>(bb + distance(aa, v2), ei->second->nodes[1]));
                 }
             }
             exitt.insert(temp->get());
         }
         list<node *> lit;
         typename list<node *>::iterator itt;
-        typename unordered_map<N, pair<double[2], N>>::iterator ite;
+        typename list<node *>::iterator ity;
+        typename unordered_map<E, pair<double[2], E>>::iterator ite;
         ite = tabla.find(v2);
         if (ite != tabla.end())
         {
@@ -537,9 +564,16 @@ public:
         {
             cout << "No se pudo llegar al nodo deseado" << endl;
         }
+        ity = lit.begin();
         for (itt = lit.begin(); itt != lit.end(); ++itt)
         {
+            ity++;
             cout << (*itt)->get() << " ";
+            if (ity != lit.end())
+            {
+                cout << (*ity)->get() << " " << buscar_arista((*itt)->get(), (*ity)->get())->get_nombre();
+            }
+            cout << endl;
         }
         cout << endl;
         return lit;
@@ -728,12 +762,6 @@ private:
     NodeSeq nodes;
     NodeIte ni;
     EdgeIte ei;
-
-public:
-    NodeSeq getNodes()
-    {
-        return (nodes);
-    }
 };
 
 typedef Graph<Traits> graph;

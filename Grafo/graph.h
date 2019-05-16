@@ -762,6 +762,12 @@ private:
     NodeSeq nodes;
     NodeIte ni;
     EdgeIte ei;
+
+public:
+    NodeSeq getNodes()
+    {
+        return nodes;
+    }
 };
 
 typedef Graph<Traits> graph;

@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
         misListas[i]->setProperty("centerLong","-12.1348806");
         misListas[i]->setProperty("centerLat","-77.02212709999999");
-
+        
 
         for (unsigned long j =0;j <= loquemevanadarlasfunciones.size(); j++) {
             vector<string> toSetCoords;

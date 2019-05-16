@@ -139,8 +139,8 @@ void readways(json j)
 int main()
 {
   string name;
-  ifstream ifs("Data/file.json");
-  ofstream data("Data/data.txt",ostream::trunc);
+  ifstream ifs("../Data/mapagrande.json");
+  ofstream data("../Data/datagrande.txt",ostream::trunc);
   json j = json::parse(ifs);
   j = j.at("osm");
   readnodes(j);

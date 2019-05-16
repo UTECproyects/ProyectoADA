@@ -1,22 +1,12 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 #include<iostream>
-#include <vector>
 #include <list>
-#include <stack>
 #include <map>
 #include <set>
-#include<limits>
 #include <unordered_map>
 #include <math.h>
 #include <cmath>
-
-#include <limits.h>
-#include <utility>
-#include <queue>
-#include <algorithm>
-#include <iomanip>
-
 #include "node.h"
 #include "edge.h"
 

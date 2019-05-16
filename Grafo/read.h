@@ -47,7 +47,7 @@ public:
       bool oneway;
       pair<double,double> findcoords;
       double tempx, tempy;
-      archivo.open("../Data/data.txt");
+      archivo.open("../Data/datagrande.txt");
       while(!archivo.eof())
         {
           archivo>>line;

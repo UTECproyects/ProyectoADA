@@ -10,6 +10,7 @@
 #include "Grafo/graph.h"
 #include"Grafo/node.h"
 #include <set>
+#include <QGeoCoordinate>
 #define nNodos 5
 #define distMax 100000
 
@@ -31,6 +32,7 @@ int main(int argc, char *argv[])
     vector<QObject*> misListas;
     //TODO
     //acuerdate, a qt le vas a pasar SOLO COORDENADAS, i =2n, n siendo el numero del nodo
+    //so that was a lie
 
     auto idNodoi = nodos.begin();
     std::set<int> ids;
@@ -46,29 +48,30 @@ int main(int argc, char *argv[])
     int  nodoEstamos = 0;
     for (int i =0;i < numNodos; i++) {
         if (i == (*ids.find(i)) ) {
-        misListas.push_back(component.create());
-        //placeholders, esto es lima
-        auto x =idNodoi->second->get_x();
-        auto y =idNodoi->second->get_y();
-        idsParafind.push_back(idNodoi->first);
-        misListas[i]->setProperty("centerLong",x);
-        misListas[i]->setProperty("centerLat",y);
-        list<Graph<Traits>::node*> ResultadosEstrella = g1.A_Star(idNodoi->first,*idsParafind.begin());
+            misListas.push_back(component.create());
+            //placeholders, esto es lima
+            auto x =idNodoi->second->get_x();
+            auto y =idNodoi->second->get_y();
+            idsParafind.push_back(idNodoi->first);
+            misListas[i]->setProperty("centerLong",x);
+            misListas[i]->setProperty("centerLat",y);
+            auto ResultadosEstrella = g1.A_Star(idNodoi->first,*idsParafind.begin());
 
-        auto idNodoj = ResultadosEstrella.begin();
-        for (unsigned long j =0;j <= ResultadosEstrella.size(); j++) {
-            vector<double> toSetCoords;
+            auto idNodoj = ResultadosEstrella.begin();
+            for (unsigned long j =0;j <= ResultadosEstrella.size(); j++) {
+                vector<double> toSetCoords;
+                QList<QVariant> buffer;
+                double lat =(*idNodoj)->get_x();
+                double longit = (*idNodoj)->get_y();
+                buffer.append(QVariant::fromValue(QGeoCoordinate(lat,longit)));
+                if (j == ResultadosEstrella.size()){
 
-          //  toSetCoords.push_back();
-            if (j == loquemevanadarlasfunciones.size()){
-                QVariant buffer;
-                buffer.setValue(toSetCoords);
-                misListas[i]->setProperty("vectorCoords",buffer);
+                    misListas[i]->setProperty("vectorCoords",buffer);
+                }
+                idNodoj++;
             }
-        idNodoj++;
-        }
 
-    nodoEstamos++;
+            nodoEstamos++;
         }idNodoi++;
     }
     if (engine.rootObjects().isEmpty())

@@ -512,7 +512,7 @@ public:
         double computation = asin(sqrt(sin(diffLa / 2) * sin(diffLa / 2) + cos(latRad1) * cos(latRad2) * sin(doffLo / 2) * sin(doffLo / 2)));
         return 2 * 6372.8 * computation * 1000;
     }
-    list<node *> A_Star(E v1, E v2)
+    pair<double, list<node *>> A_Star(E v1, E v2)
     {
         //typename multimap<double,node*>::iterator it;
         typedef typename multimap<double, node *>::iterator iter;
@@ -578,8 +578,11 @@ public:
         typename list<node *>::iterator ity;
         typename unordered_map<E, pair<double[2], E>>::iterator ite;
         ite = tabla.find(v2);
+        double dist;
         if (ite != tabla.end())
         {
+            dist = ite->second.first[0];
+            cout << dist << endl;
             while (ite->first != v1)
             {
                 lit.push_front(buscar_vertice(ite->first));
@@ -603,7 +606,8 @@ public:
             cout << endl;
         }
         cout << endl;
-        return lit;
+
+        return make_pair(dist, lit);
     }
     //-----------------------------------------------------------------------FLOYD WARSHALL
     /*matrices* floyd_warshall(){

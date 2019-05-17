@@ -34,7 +34,7 @@ Window {
 
      Component.onCompleted: {
                  var lines = []
-                 var size = []
+                 var spots = []
                  for(var i=0; i <geopath.size(); i++){
                      lines[i] = geopath.coordinateAt(i)
                  }

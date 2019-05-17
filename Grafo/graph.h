@@ -582,7 +582,7 @@ public:
         if (ite != tabla.end())
         {
             dist = ite->second.first[0];
-            cout << dist << endl;
+            //cout << dist << endl;
             while (ite->first != v1)
             {
                 lit.push_front(buscar_vertice(ite->first));
@@ -594,6 +594,7 @@ public:
         {
             cout << "No se pudo llegar al nodo deseado" << endl;
         }
+        /*
         ity = lit.begin();
         for (itt = lit.begin(); itt != lit.end(); ++itt)
         {
@@ -605,6 +606,7 @@ public:
             }
             cout << endl;
         }
+        */
         cout << endl;
 
         return make_pair(dist, lit);

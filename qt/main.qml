@@ -31,6 +31,16 @@ Window {
          line.color: "green"
 
      }
+         MapCircle{
+             id:circ
+             radius: 30
+             center {
+                         latitude: -12.1594
+                         longitude: -76.9667
+                     }
+             color: 'red'
+
+         }
 
      Component.onCompleted: {
                  var lines = []

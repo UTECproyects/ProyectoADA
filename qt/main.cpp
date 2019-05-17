@@ -15,7 +15,7 @@
 #include <set>
 #include <QGeoCoordinate>
 #define nNodos 13
-#define nodoini 377048583
+#define nodoini 4394276694
 #define distMax 100000
 
 
@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
     auto nodos = g1.getNodes();
     auto numNodos = g1.total_nodos();
     srand (time(nullptr));
+    cout<<g1.buscar_vertice(nodoini)->get_y()<<g1.buscar_vertice(nodoini)->get_x()<<endl;
     g1.iniciar_taxis(nNodos);
     vector <string> loquemevanadarlasfunciones;
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);

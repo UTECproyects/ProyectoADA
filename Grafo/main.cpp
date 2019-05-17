@@ -2,6 +2,8 @@
 #include <iostream>
 #include "read.h"
 #include "graph.h"
+#include<windows.h>
+#include<vector>
 
 using namespace std;
 
@@ -14,6 +16,17 @@ int main(int argc, char *argv[]) {
     gg.getGraph(&g1);
     long long a,b;
     bool ciclo=true;
+    /*
+    g1.iniciar_taxis(3);
+    while(ciclo){
+      cout<<endl;
+      Sleep(1000);
+      g1.mover_taxis();
+    }
+    */
+
+
+
     while(ciclo){
       cout<<"ingrese nodos: "<<endl;
       cin>>a;
@@ -22,6 +35,7 @@ int main(int argc, char *argv[]) {
       g1.A_Star(a,b);
       cout<<endl;
     }
+  
     //g1.print();
     cout <<endl;
     /*

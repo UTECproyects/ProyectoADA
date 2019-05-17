@@ -31,13 +31,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
-    QGeoPath geopath;
-    geopath.addCoordinate(QGeoCoordinate(-12.1348806, -77.02212709999999));
-    geopath.addCoordinate(QGeoCoordinate(56.1, 93));
-    geopath.addCoordinate(QGeoCoordinate(56.1, 92.777));
-    engine.load(QUrl(QStringLiteral("/home/fernando/Desktop/ADA_masterbranch/ProyectoADA/qt/main.qml")));
-    QQmlComponent component(&engine,QUrl::fromLocalFile("/home/fernando/Desktop/ADA_masterbranch/ProyectoADA/qt/main.qml"));
-    engine.rootContext()->setContextProperty("geopath", QVariant::fromValue(geopath));
+    QGeoPath geopath,geosize;
     vector<QObject*> misListas;
 //    QObject *object = component.create();
 //    QObject *mapa = object->findChild<QObject*>("myMap");
@@ -73,13 +67,16 @@ int main(int argc, char *argv[])
             idsParafind.push_back(idNodoi->first);
 //            misListas[i]->setProperty("centerLong",x);
 //            misListas[i]->setProperty("centerLat",y);
-            auto ResultadosEstrella = g1.A_Star(4354621323,4394276694);
+            auto ResultadosEstrella = g1.A_Star(4394276694,4354621323);
             auto idNodoj = ResultadosEstrella.begin();
             QList<QVariant> buffer;
-            for (list<Node<Graph<Traits>>*>::iterator  j = ResultadosEstrella.begin(); j != ResultadosEstrella.end(); j++) {
+
+            for (list<Node<Graph<Traits>>*>::iterator  j = ResultadosEstrella.begin(); j != ResultadosEstrella.end(); ++j) {
                 vector<double> toSetCoords;
-                cout<<(*j)->get_x()<<endl;
-                cout<<(*j)->get_y()<<endl<<endl;
+                set<long> a;
+                geopath.addCoordinate(QGeoCoordinate((*j)->get_y(), (*j)->get_x()));
+
+                cout<<(*j)->get()<<endl;
               //  double lat =(*idNodoj)->get_x();
               //  double longit = (*idNodoj)->get_y();
                  //   buffer.append(QVariant::fromValue(QGeoCoordinate(lat,longit)));
@@ -92,7 +89,11 @@ int main(int argc, char *argv[])
 
             nodoEstamos++;
         }idNodoi++;
+
     //}
+    engine.rootContext()->setContextProperty("geopath", QVariant::fromValue(geopath));
+    engine.load(QUrl(QStringLiteral("/home/fernando/Desktop/ADA_masterbranch/ProyectoADA/qt/main.qml")));
+    QQmlComponent component(&engine,QUrl::fromLocalFile("/home/fernando/Desktop/ADA_masterbranch/ProyectoADA/qt/main.qml"));
     if (engine.rootObjects().isEmpty())
         return -1;
 

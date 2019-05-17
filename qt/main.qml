@@ -27,22 +27,19 @@ Window {
 
          MapPolyline{
              id:pl
-         objectName: "myLine"
-         line.width: 4
+         line.width: 6
          line.color: "green"
+
      }
 
      Component.onCompleted: {
                  var lines = []
-                 for(var i=0; i < geopath.size(); i++){
+                 var size = []
+                 for(var i=0; i <geopath.size(); i++){
                      lines[i] = geopath.coordinateAt(i)
                  }
                  pl.path = lines
              }
-
-//         { latitude: -27, longitude: 153.0 },
-//         { latitude: -27, longitude: 154.1 },
-
 
        
     }

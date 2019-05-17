@@ -7,27 +7,16 @@
 #include <unordered_map>
 #include <math.h>
 #include <cmath>
+#include <ctime>
+#include <cstdlib>
 #include "node.h"
 #include "edge.h"
+#include "Taxi.h"
 
 #define INF 9999
 
 using namespace std;
 
-struct matrices{
-    int** distancias;
-    int** caminos;
-    matrices(const unsigned int n){
-        distancias = new int* [n];
-        for (int i = 0; i < n; i++) {
-            distancias[i] = new int[n];
-        }
-        caminos = new int* [n];
-        for (int i = 0; i < n; i++) {
-            caminos[i] = new int[n];
-        }
-    }
-};
 //kennet louden contrucccion de comppiladores
 #ifdef _WIN32
 class Traits {
@@ -43,19 +32,22 @@ class Traits {
 };
 #endif
 
-
+int ran=0;
 template <typename Tr>
 class Graph {
     public:
         typedef Graph<Tr> self;
         typedef Node<self> node;
         typedef Edge<self> edge;
+        typedef Taxi<self> taxi;
         typedef typename Tr::N N;
         typedef typename Tr::E E;
         typedef unordered_map<E,node*> NodeSeq;
         typedef unordered_map<E,edge*> EdgeSeq;
+        typedef unordered_map<E,taxi*> taxis;
         typedef typename NodeSeq::iterator NodeIte;
         typedef typename EdgeSeq::iterator EdgeIte;
+        typedef typename taxis::iterator txite;
 
         Graph(){};
         void tipo(bool tipo){
@@ -113,7 +105,7 @@ class Graph {
         //-----------------------------------------------------------------------INSERTAR NODO
         void insertar_nodo(E id,double x, double y){
             if (buscar_vertice(id)!=nullptr){
-                cout<<"Nodo "<<id <<" ya existente"<<endl;
+                //cout<<"Nodo "<<id <<" ya existente"<<endl;
                 //system("pause");
                 return;
             }
@@ -123,7 +115,7 @@ class Graph {
         //-----------------------------------------------------------------------INSERTAR ARISTA
         void insertar_arista(E v1,E v2,string nombre,double peso){
             if (buscar_arista(v1,v2)!=nullptr){
-                cout<<"Arista "<<v1<<"-"<<v2<<" ya existe"<<endl;
+                //cout<<"Arista "<<v1<<"-"<<v2<<" ya existe"<<endl;
                 //system("pause");
                 return;
             }
@@ -152,7 +144,7 @@ class Graph {
         node* buscar_vertice(E v1){
             ni=nodes.find(v1);
             if(ni!=nodes.end())return ni->second;
-            cout<<"Nodo "<<v1<<" no existe"<<endl;
+            //cout<<"Nodo "<<v1<<" no existe"<<endl;
             return nullptr;
         }
         //-----------------------------------------------------------------------BUSCAR ARISTA
@@ -177,6 +169,42 @@ class Graph {
               cout <<ni->first<<" "<<ni->second->get_x()<<" "<<ni->second->get_y()<<endl;
           }
 
+        }
+        //-----------------------------------------------------------------------Taxistas
+        taxi* buscar_taxista(E id){
+          return taxistas[id];
+        }
+        void iniciar_taxis(int n){
+            map<E,E> nodesid;
+            E id=0;
+            for( ni=nodes.begin();ni!=nodes.end();++ni){
+              id++;
+              nodesid.insert(pair<E,E>(id,ni->first));
+            }
+            srand((int)time(0));
+            for(int i=0;i<n;i++){
+                int r = (rand() % total_nodos());
+                taxi* temp=new taxi(i,nodes[nodesid[r]],nodes[nodesid[r]]->get_x(),nodes[nodesid[r]]->get_y());
+                cout<<temp->get()<<" "<<temp->nodo->get()<<" "<<temp->get_x()<<" "<<temp->get_y()<<endl;
+                taxistas.insert(pair<E,taxi*>(i,temp));
+            }
+        }
+        void mover_taxis(){
+            srand((int)time(0));
+            int r;
+            for(ti=taxistas.begin();ti!=taxistas.end();++ti){
+                r = (rand() % 3)+1;
+                if(r<3){
+                    r = (rand() % ti->second->nodo->edges.size())+1;
+                    ei=ti->second->nodo->edges.begin();
+                    for(int z=1;z<r;z++){
+                      ei++;
+                    }
+                    ti->second->nodo=ei->second->nodes[1];
+                    ti->second->set_xy(ti->second->nodo->get_x(),ti->second->nodo->get_y());
+                    cout<<ti->second->get()<<" "<<ti->second->get_x()<<" "<<ti->second->get_y()<<endl;
+                }
+            }
         }
         //-----------------------------------------------------------------------DENSIDAD
         /*double densidad(){
@@ -695,8 +723,10 @@ class Graph {
     private:
         bool dir;
         NodeSeq nodes;
+        taxis taxistas;
         NodeIte ni;
         EdgeIte ei;
+        txite ti;
 };
 
 typedef Graph<Traits> graph;

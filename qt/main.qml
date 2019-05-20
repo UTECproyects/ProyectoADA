@@ -21,6 +21,7 @@ Window {
          zoomLevel: 13
          id:myMap
          center : QtPositioning.coordinate( -12.1348806 , -77.02212709999999);
+         property var tester
 
 
 
@@ -47,12 +48,15 @@ Window {
                  var spots = []
                  for(var i=0; i <geopath.size(); i++){
                      lines[i] = geopath.coordinateAt(i)
+
                  }
                  pl.path = lines
              }
 
-       
+       function debug(a){
+        console.debug(a)
+       }
     }
-    
+
     }
 

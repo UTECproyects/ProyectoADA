@@ -34,7 +34,7 @@ public:
 };
 #endif
 
-int ran = 0;
+
 template <typename Tr>
 class Graph
 {

@@ -49,7 +49,7 @@ public:
     bool oneway;
     pair<double, double> findcoords;
     double tempx, tempy;
-    archivo.open("/home/fernando/Desktop/ADA_masterbranch/ProyectoADA/Data/datagrande.txt");
+    archivo.open("../Data/datagrande.txt");
     while (!archivo.eof())
     {
       archivo >> line;

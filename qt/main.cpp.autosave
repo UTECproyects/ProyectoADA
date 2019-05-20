@@ -17,6 +17,12 @@
 #define nNodos 100
 #define nodoini 4362423164
 #define distMax 100000
+#ifndef LAVAINA
+#define LAVAINA
+#include "../Grafo/read.h"
+#include "../Grafo/graph.h"
+#include"../Grafo/node.h"
+#endif
 
 
 

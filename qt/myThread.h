@@ -16,7 +16,7 @@ class myThread :  public QThread
 {
 public :
     myThread();
-    myThread(graph *grafo, double *min, std::list<Node<Graph<Traits>>*,std::allocator<Node<Graph<Traits>>*>> *lista,QAtomicInt *agregador, int numNodosi , QMutex *mutex);
+    myThread(graph grafo, double *min, std::list<Node<Graph<Traits>>*,std::allocator<Node<Graph<Traits>>*>> *lista,QAtomicInt *agregador, int numNodosi , QMutex *mutex);
     void run();
 
 
@@ -24,7 +24,7 @@ private:
 
     int numNodos;
     std::list<Node<Graph<Traits>>*,std::allocator<Node<Graph<Traits>>*>> * myList;
-    graph* myGraph;
+    graph myGraph;
     QAtomicInt  *myAccum;
     double  *myMin;
     QMutex * mutexLock;

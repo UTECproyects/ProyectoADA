@@ -1,6 +1,6 @@
 #ifndef READ_H
 #define READ_H
-
+#include <QUrl>
 #include <iostream>
 #include <fstream>
 #include <cmath>
@@ -49,10 +49,12 @@ public:
     bool oneway;
     pair<double, double> findcoords;
     double tempx, tempy;
-    archivo.open("../Data/datagrande.txt");
+    archivo.open("/home/fernando/Desktop/ADA_masterbranch/ProyectoADA/Data/datagrande.txt");
+
     while (!archivo.eof())
     {
       archivo >> line;
+
       if (line != "@")
       {
 #ifdef _WIN32

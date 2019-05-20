@@ -17,12 +17,16 @@
 #define nNodos 100
 #define nodoini 4362423164
 #define distMax 100000
+#ifndef LAVAINA
+#define LAVAINA
+#include "../Grafo/read.h"
+#include "../Grafo/graph.h"
+#include"../Grafo/node.h"
+#endif
 
 
 
-int currentTaxi = 1;
 
-std::list<Node<Graph<Traits>>*,std::allocator<Node<Graph<Traits>>*>> lista;
 
 
 
@@ -47,18 +51,18 @@ int main(int argc, char *argv[])
    // auto ResultadosEstrella = g1.A_Star(nodoini,1432901632);
     auto lista=ResultadosEstrella.second;
     //empiezo los threads
-    vector<myThread> vectorThreads;
     QAtomicInt agregador=1;
     int numeroNodos = nNodos;
     QMutex mutex;
     vector<myThread *> misthreads;
     double menor =  2147483647;
     for (int i = 0; i < numThreads; ++i) {
-        myThread * ptrThread =new myThread (&g1, &menor,&lista,&agregador,numeroNodos,&mutex);
+        myThread * ptrThread =new myThread (g1, &menor,&lista,&agregador,numeroNodos,&mutex);
         misthreads.push_back(ptrThread);
+        misthreads[i]->start();
     }
     for (int i = 0; i < numThreads; ++i){
-        vectorThreads[i].wait();
+        misthreads[i]->wait();
     }
 //    for(int j=1;j<nNodos;j++){
 
@@ -74,8 +78,8 @@ int main(int argc, char *argv[])
     }
 
     engine.rootContext()->setContextProperty("geopath", QVariant::fromValue(geopath));
-    engine.load(QUrl(QStringLiteral("qt/main.qml")));
-    QQmlComponent component(&engine,QUrl::fromLocalFile("qt/main.qml"));
+    engine.load(QUrl(QStringLiteral("/home/fernando/Desktop/ADA_masterbranch/ProyectoADA/qt/main.qml")));
+    QQmlComponent component(&engine,QUrl::fromLocalFile("/home/fernando/Desktop/ADA_masterbranch/ProyectoADA/qt/main.qml"));
     if (engine.rootObjects().isEmpty())
         return -1;
 

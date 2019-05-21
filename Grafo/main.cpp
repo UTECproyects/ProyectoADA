@@ -16,6 +16,10 @@ int main(int argc, char *argv[]) {
     gg.getGraph(&g1);
     long long a,b;
     bool ciclo=true;
+
+    g1.Dijkstra(412528253,791159916);
+    cout<<endl;
+    g1.A_Star(412528253,791159916);
     /*
     g1.iniciar_taxis(3);
     while(ciclo){
@@ -26,7 +30,7 @@ int main(int argc, char *argv[]) {
     */
 
 
-
+    /*
     while(ciclo){
       cout<<"ingrese nodos: "<<endl;
       cin>>a;
@@ -35,6 +39,7 @@ int main(int argc, char *argv[]) {
       g1.A_Star(a,b);
       cout<<endl;
     }
+    */
   
     //g1.print();
     cout <<endl;

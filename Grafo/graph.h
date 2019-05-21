@@ -537,27 +537,27 @@ public:
 
             for (ei = temp->edges.begin(); ei != temp->edges.end(); ++ei)
             {
-                E aa = ei->first;
-                if (exitt.count(aa) == 1)
+                E next_node = ei->first;
+                if (exitt.count(next_node) == 1)
                 {
                     continue;
                 }
-                double bb = tabla[temp->get()].first[0] + ei->second->get();
-                if (tabla.count(aa) == 1)
+                double new_wei = tabla[temp->get()].first[0] + ei->second->get();
+                if (tabla.count(next_node) == 1)
                 {
-                    if (bb < tabla[aa].first[0])
+                    if (new_wei < tabla[next_node].first[0])
                     {
                         pair<iter, iter> rango;
-                        rango = nodos.equal_range(tabla[aa].first[0]);
-                        tabla[aa].first[0] = bb;
-                        tabla[aa].first[1] = bb + distance(aa, v2);
-                        tabla[aa].second = temp->get();
+                        rango = nodos.equal_range(tabla[next_node].first[0]);
+                        tabla[next_node].first[0] = new_wei;
+                        tabla[next_node].first[1] = new_wei + distance(next_node, v2);
+                        tabla[next_node].second = temp->get();
                         for (it = rango.first; it != rango.second; ++it)
                         {
-                            if (it->second->get() == aa)
+                            if (it->second->get() == next_node)
                             {
                                 nodos.erase(it);
-                                nodos.insert(pair<double, node *>(bb + distance(aa, v2), ei->second->nodes[1]));
+                                nodos.insert(pair<double, node *>(new_wei + distance(next_node, v2), ei->second->nodes[1]));
                                 break;
                             }
                         }
@@ -565,10 +565,10 @@ public:
                 }
                 else
                 {
-                    tabla[aa].first[0] = bb;
-                    tabla[aa].first[1] = bb + distance(aa, v2);
-                    tabla[aa].second = temp->get();
-                    nodos.insert(pair<double, node *>(bb + distance(aa, v2), ei->second->nodes[1]));
+                    tabla[next_node].first[0] = new_wei;
+                    tabla[next_node].first[1] = new_wei + distance(next_node, v2);
+                    tabla[next_node].second = temp->get();
+                    nodos.insert(pair<double, node *>(new_wei + distance(next_node, v2), ei->second->nodes[1]));
                 }
             }
             exitt.insert(temp->get());
@@ -594,19 +594,14 @@ public:
         {
             cout << "No se pudo llegar al nodo deseado" << endl;
         }
-        /*
+        
         ity = lit.begin();
         for (itt = lit.begin(); itt != lit.end(); ++itt)
         {
-            ity++;
-            cout << (*itt)->get() << " ";
-            if (ity != lit.end())
-            {
-                cout << (*ity)->get() << " " << buscar_arista((*itt)->get(), (*ity)->get())->get_nombre();
-            }
-            cout << endl;
+            
+            cout << (*itt)->get() <<endl;                        
         }
-        */
+        
         cout << endl;
 
         return make_pair(dist, lit);
@@ -738,6 +733,75 @@ public:
         }*/
 
     //--------------------------------------------------------------------DIJKSTRA
+    E menor_d(unordered_map<E,double> nodos){
+        typedef typename unordered_map<E, double>::iterator iter;
+        iter it;
+        if(nodos.empty()){cout<<"error en nodos:Dijkstra";return 0;}
+        double menor=99999999;
+        E nodo_menor;
+        for(it=nodos.begin();it!=nodos.end();++it){
+            if(it->second<menor){
+                nodo_menor=it->first;
+                menor=it->second;
+            }
+        }
+        return nodo_menor;
+    }
+    list<node *> Dijkstra(E v1, E v2){
+        typedef typename unordered_map<E, double>::iterator iter;        
+        unordered_map<E, double> nodos;
+        unordered_map<E,E> tabla;
+        set<E> exitt;
+        iter it;
+        node* curr_node;
+        nodos.insert(pair<E,double>(v1,0));
+        tabla.insert(pair<E,E>(v1,v1));        
+        while(!nodos.empty()){                   
+            E curr_node_id= menor_d(nodos);                           
+            curr_node=buscar_vertice(curr_node_id);            
+            if (curr_node->get() == v2)break;                        
+
+            for (ei = curr_node->edges.begin(); ei != curr_node->edges.end(); ++ei){
+                E next_node = ei->first;
+                if (exitt.count(next_node) == 1)continue;
+                double new_wei = nodos[curr_node->get()] + ei->second->get();
+
+                if (nodos.count(next_node) == 1){
+                    if (new_wei < nodos[next_node]){                        
+                        nodos[next_node] = new_wei;
+                        tabla[next_node]=curr_node->get();                                                
+                    }
+                }
+                else{
+                    nodos.insert(pair<E,double>(next_node,new_wei));
+                    tabla.insert(pair<E,E>(next_node,curr_node->get()));                    
+                }
+            }
+            nodos.erase(curr_node_id);
+            exitt.insert(curr_node->get());                    
+        }
+
+        list<node *> lit;
+        typename list<node *>::iterator its;
+        typename list<node *>::iterator ity;
+        typename unordered_map<E,E>::iterator ite;
+        ite = tabla.find(v2);
+        double dist;
+        if (ite != tabla.end()){                        
+            while (ite->first != v1){
+                lit.push_front(buscar_vertice(ite->first));
+                ite = tabla.find(ite->second);
+            }
+            lit.push_front(buscar_vertice(v1));
+        }
+        else{
+            cout << "No se pudo llegar al nodo deseado" << endl;
+        }
+        for(its=lit.begin();its!=lit.end();++its){
+            cout<<(*its)->get()<<endl;
+        }
+        return lit;
+    }
     /*map<N,E> dijkstra(N vertice){
             map<N,E> table;
             set<N> visited;
